@@ -2,7 +2,7 @@
   import type { Motor } from "./interfaces.js";
   import { MotorDeCombustion } from "./MotorDeCombustion.js";
   import { MotorElectrico } from "./MotorElectrico.js";
-  import { Ruedas, Chasis, TipoCombustible } from "./partes.js";
+  import { Ruedas, Chasis, TipoCombustible, TipoRueda } from "./partes.js";
 
   export class Auto{
   // La clase central. El auto NO es un motor: se ARMA con un motor, un chasis
@@ -84,4 +84,35 @@
     return this.precio;
   }
 
+  public setPrecio(precio: number): void{
+    if(precio <= 0){
+      throw new Error("El precio no puede ser negativo ni cero");
+    }
+    this.precio = precio;
   }
+
+  public getFechaVenta(): Date | null{
+    return this.fechaVenta;
+  }
+  
+  public setFechaVenta(fecha: Date): void{
+    this.fechaVenta = fecha;
+  }
+
+  public getDescripcion(): string{
+    return `Auto ${this.patente} con motor ${this.motor.tipoCombustible}, chasis color ${this.chasis.getColor()}, ruedas de rodado ${this.ruedas.getRodado()} y precio $${this.precio}`;
+  }
+}
+
+let uno_seis = new MotorDeCombustion(TipoCombustible.NAFTA);
+let fiesta_chasis = new Chasis("gris");
+let fiesta_ruedas = new Ruedas(18, TipoRueda.DEPORTIVA)
+
+let ford_fiesta = new Auto(uno_seis, fiesta_chasis, fiesta_ruedas, 7000000, "ABC123");
+console.log(ford_fiesta.getDescripcion());
+console.log(ford_fiesta.encender());
+console.log(ford_fiesta.conducir());
+console.log(ford_fiesta.apagar());
+ford_fiesta.setFechaVenta(new Date());
+console.log(ford_fiesta.getFechaVenta);
+console.log("getDescripcion", ford_fiesta.getDescripcion())
