@@ -30,7 +30,7 @@ CREATE TABLE Clientes(
     id_cliente INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(120) NOT NULL UNIQUE,
-    telefono INT
+    telefono VARCHAR(30)
 );
 
 CREATE TABLE Pedidos(
@@ -42,17 +42,37 @@ CREATE TABLE Pedidos(
     FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente)
 );
 
+INSERT INTO Clientes (nombre, email, telefono) VALUES
+    ('Ana',  'ana@mail.com',  '341-555-0001'),
+    ('Luis', 'luis@mail.com', '341-555-0002'),
+    ('Sofia','sofia@mail.com','341-555-0003');
+
+INSERT INTO Pedidos (producto, precio, fecha, id_cliente) VALUES
+    ('Teclado',   25000.00, '2026-03-01', 1),
+    ('Mouse',     12000.00, '2026-03-03', 1),
+    ('Monitor',  180000.00, '2026-03-05', 1),
+    ('Notebook', 950000.00, '2026-03-06', 2);
+
 -- 3.1 INSERT
 -- TODO: insertá 2 clientes en UNA sola sentencia
+INSERT INTO Clientes (nombre, email) VALUES
+    ('Marta', 'marta@mail.com'),
+    ('Pedro', 'pedro@mail.com');
+SELECT * FROM Clientes;
+
 -- TODO: insertá uno y mostrá LAST_INSERT_ID() y usalo para su primer pedido
+
 -- TODO: intentá repetir un email. Anotá el error.
 -- TODO: intentá un pedido con id_cliente = 999. Anotá el error.
 -- TODO: mirá SELECT @@sql_mode -- esta STRICT_TRANS_TABLES?
 --       probá un INSERT sin el email (campo NOT NULL). Da error?
 
+
 -- 3.2 UPDATE
 -- TODO: SELECT primero, UPDATE con el mismo WHERE, SELECT para confirmar
 -- TODO: subile 10% el precio a un producto usando precio = precio * 1.10
+UPDATE Pedidos SET precio = precio * 1.10 
+WHERE id_pedido = 2;
 
 -- El UPDATE sin WHERE, con red:
 -- TODO: START TRANSACTION, UPDATE sin WHERE sobre telefono,
@@ -63,6 +83,7 @@ CREATE TABLE Pedidos(
 -- TODO: intentá borrar un cliente que tiene pedidos. Anotá el error.
 -- TODO: borrá uno que no tenga pedidos
 -- TODO: el DELETE sin WHERE, dentro de START TRANSACTION + ROLLBACK
+DELETE FROM clientes WHERE id_cliente = 5;
 
 -- TODO: anotá en qué se diferencia TRUNCATE de DELETE
 
