@@ -1,45 +1,52 @@
 -- ============================================================
--- 03 - LA TRAMPA DEL NULL
--- Este archivo es un experimento: la idea es que te dé un
--- resultado raro y que después entiendas por qué.
+-- 04 - ORDER BY, DISTINCT y LIMIT
 -- ============================================================
 
+SET NAMES utf8mb4;
+USE clase05;
 
--- 1. Listá nombre, apellido y email de todos los alumnos.
---    Contá a ojo cuántos NO tienen email. Anotá ese número.
+-- 1. Los productos ordenados por precio, del más barato al más caro.
+SELECT * FROM producto ORDER BY precio;
 
--- 2. Ahora traé los alumnos que no tienen email, comparando la
---    columna email con NULL usando el = de siempre.
---    ¿Cuántas filas salieron? ¿Dio algún error?
+-- 2. Los mismos, al revés.
+--    De los dos sentidos, uno es el que la base usa si no le aclarás
+--    nada. ¿Cuál? Probalo sin poner la palabra.
+SELECT * FROM producto ORDER BY precio DESC ;
 
--- 3. Probá ahora la condición CONTRARIA, con <> (distinto de).
---    ¿Cuántas filas salieron esta vez?
---
---    Pará acá y pensalo: una condición y su contraria devolvieron
---    lo mismo. Si fuera una comparación normal, entre las dos
---    tendrían que haber salido los 10 alumnos. Algo no es una
---    comparación normal.
+-- 3. Ordenalos por categoría y, DENTRO de cada categoría, por precio
+--    de mayor a menor. Se puede ordenar por más de una columna.
+SELECT * FROM producto ORDER by categoria, precio desc;
 
--- 4. Hay dos operadores especiales para preguntar por valores
---    ausentes. No usan el =. Averiguá cuáles son y escribí las dos
---    consultas: los que no tienen email, y los que sí.
---    Los dos números tienen que sumar 10.
+-- 4. Ordená los productos por categoría ascendente y fijate DÓNDE
+--    quedaron los dos que tienen NULL: ¿al principio o al final?
+--    (Esto cambia según el motor de base de datos, no es una regla.)
+-- 3. Ordenalos por categoría y, DENTRO de cada categoría, por precio
+--    de mayor a menor. Se puede ordenar por más de una columna.
+SELECT * FROM producto ORDER by categoria ASC;
 
--- 5. Para entender la causa, corré esta consulta tal cual está.
---    Mirá bien la tercera columna: no es 1 ni es 0.
+-- 5. Traé la columna categoria de todos los productos. Salen 10, con
+--    repetidos. Ahora traela sin repetidos.
+-- 3. Ordenalos por categoría y, DENTRO de cada categoría, por precio
+--    de mayor a menor. Se puede ordenar por más de una columna.
+SELECT categoria FROM producto;
+SELECT  DISTINCT  categoria FROM producto;  
 
---    En SQL una comparación puede dar tres cosas, no dos. Y WHERE
---    solo deja pasar las filas donde la condición es verdadera.
---    Con eso, explicá con tus palabras el resultado del punto 2.
+-- 6. ¿Cuántas te dio el punto anterior? Contá las categorías de verdad
+--    que hay en los datos. Si los números no coinciden, el culpable es
+--    el mismo del archivo 03. Escribí la consulta que trae solo las
+--    categorías reales.
 
--- 6. EL CASO QUE DE VERDAD SE COBRA VÍCTIMAS.
---    Traé los productos que NO son de categoría 'audio'.
---    Contá primero a ojo cuántos deberían ser, y después corré.
---    Te va a faltar alguno. ¿Cuál, y por qué?
+-- 7. Los 3 productos más caros. Necesitás dos cláusulas: una que
+--     ordene y otra que corte.
+SELECT * FROM producto ORDER by precio DESC LIMIT 3;
 
--- 7. Corregí la consulta anterior para que traiga todos los que
---    realmente no son de audio.
+-- 8. El producto más barato, con una sola consulta.
+SELECT * FROM producto ORDER by precio LIMIT 1;
 
--- 8. Por último: listá todos los productos, pero que donde dice
---    NULL muestre el texto 'sin categoría'.
---    Buscá una función de MySQL que reemplace los NULL por un valor.
+-- 9. Probá cortar el resultado SIN ordenar antes. ¿Qué garantía tenés
+--    de cuáles 3 filas te va a dar? Ninguna. Por eso van juntas.
+
+-- 10. Todo junto, en una sola consulta: los 3 productos más caros
+--     entre los que tienen categoría y cuestan más de $20.000.
+--     Las cláusulas van en un orden fijo: FROM, WHERE, ORDER BY, LIMIT.
+SELECT * FROM producto WHERE categoria IS NOT null AND precio > 20000 ORDER by precio DESC LIMIT 3;
